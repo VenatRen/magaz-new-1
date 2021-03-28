@@ -1,8 +1,10 @@
 import React, { useRef, useLayoutEffect } from "react";
 import { Animated, FlatList } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+
 import { useQuery } from "@apollo/client";
-import { QUERY_PRODUCT_LIST } from "~/queries";
+import { QUERY_PRODUCT_LIST } from "~/apollo/queries";
+
 import { HeaderBackButton, HeaderCartButton, HeaderTitle } from "~/components/Header/index";
 import OurActivityIndicator from "~/components/OurActivityIndicator";
 import ProductsItem from './ProductsItem/index';

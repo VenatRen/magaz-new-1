@@ -1,2 +1,0 @@
-https://habr.com/ru/post/307652/
-https://github.com/i18next/react-i18next

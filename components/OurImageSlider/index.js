@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { View, StatusBar } from "react-native";
 import ViewPager from '@react-native-community/viewpager';
 import Modal from 'react-native-modal';
-import { STORE_ADDRESS } from "~/config";
+
 import OurImage from "~/components/OurImage";
 import OurTextButton from "~/components/OurTextButton";
 import styles from "./styles";

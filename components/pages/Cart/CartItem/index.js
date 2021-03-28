@@ -1,15 +1,16 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Animated, Dimensions, View, LayoutAnimation } from "react-native";
-import { stateContext } from "~/contexts";
-import { STORE_ADDRESS } from "~/config";
+
+import { STORE_ADDRESS } from "~/utils/config";
+
 import OurText from "~/components/OurText";
 import OurImage from "~/components/OurImage";
 import OurImageSlider from "~/components/OurImageSlider";
-import ItemCount from "./ItemCount";
+//import ItemCount from "./ItemCount";
 import styles from "./styles";
 
 const ANIMATION_DURATION = 200;
-const PRODUCT_MIN_HEIGHT = .00001;
+const PRODUCT_MIN_HEIGHT = 0.0001;
 
 const linear = LayoutAnimation.create(
     ANIMATION_DURATION,
@@ -36,7 +37,8 @@ const CartItem = (props) => {
         }).start(callback);
         setHeight(PRODUCT_MIN_HEIGHT);
     };
-
+    const total = price.match(/(\d{0,99})\.(\d{0,99})(\D)/);
+    const newPrice = total[1] + total[3];
 
     return (
         <Animated.View style={[styles.mainContainer, { opacity, height }]}>
@@ -48,8 +50,8 @@ const CartItem = (props) => {
             <View style={styles.bottomContainer}>
                 <OurText style={styles.itemCount} params={{quantity: productQuantity}}>cartPcs</OurText>
                 <View style={styles.itemCountController}>
-                    <OurText style={styles.itemPrice}>{price * productQuantity}$</OurText>
-                    <ItemCount productId={productId} quantity={productQuantity} onRemove={onRemove}/>
+                    <OurText style={styles.itemPrice}>{newPrice}</OurText>
+                    {/*<ItemCount productId={productId} quantity={productQuantity} onRemove={onRemove}/>*/}
                 </View>
             </View>
             <View style={styles.borderContainer}>

@@ -1,19 +1,23 @@
-import React, {useState, useContext, useLayoutEffect} from "react";
-import { View, FlatList, Animated } from "react-native";
+import React, { useEffect, useLayoutEffect } from "react";
+import { View, FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { stateContext } from "~/contexts";
-import OurText from "~/components/OurText";
-import OurTextButton from "~/components/OurTextButton";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchCartProductList } from "~/redux/CartReducer/actions";
+import { ShowModal } from "~/redux/ModalReducer/actions";
+import SyncStorage from "sync-storage";
+
 import { HeaderBackButton, HeaderTitle, HeaderOrdersButton } from "~/components/Header/index";
 import CartItem from "./CartItem";
 import CartTotal from "./CartTotal";
+import OurText from "~/components/OurText";
+import OurTextButton from "~/components/OurTextButton";
+import OurActivityIndicator from "~/components/OurActivityIndicator";
 import styles from "./styles";
 
 const LocallyAnimatedFlatList = ({data}) => {
-
     const renderItemsBlock = ({item, index}) => {
         return (
-            <CartItem productId={item.productId} name={item.name} price={item.price} productQuantity={item.productQuantity} imageLink={item.imageLink}/>
+            <CartItem productId={item.product.databaseId} name={item.product.name} price={item.total} productQuantity={item.quantity} imageLink={item.product.image.mediaDetails.file}/>
         );
     };
 
@@ -23,7 +27,7 @@ const LocallyAnimatedFlatList = ({data}) => {
             contentContainerStyle={styles.cartList}
             data={data}
             renderItem={renderItemsBlock}
-            keyExtractor={(item) => String(item.productId)}
+            keyExtractor={(item) => String(item.key)}
         />
     )
 };
@@ -32,9 +36,16 @@ const MemoedLocallyAnimatedFlatList = React.memo(LocallyAnimatedFlatList);
 
 /** Компонент корзины */
 const Cart = (props) => {
-    const state = useContext(stateContext);
+    const state = useSelector(state=>state.cartReducer);
+    const dispatch = useDispatch();
     const { navigation } = props;
     const [gradStart, gradEnd] = ["#E81C1C", "#E4724F"];
+
+    useEffect(() => {
+        if ( !state.loading ) {
+            dispatch(FetchCartProductList);
+        }
+    }, []);
 
     useLayoutEffect( () => {
         navigation.setOptions({
@@ -48,8 +59,39 @@ const Cart = (props) => {
     }, [navigation]);
 
     const toDeliveryDetails = (e) => {
-        if ( state.cartItems?.size )
-            navigation.navigate("DeliveryDetails");
+        if ( state.productList?.size ) {
+            if ( !SyncStorage.get("bearer-token") ) {
+                const loginModalData = {
+                    title: { text: "cartLoginTitle", params: {} },
+                    text: { text: "cartLoginMessage", params: {} },
+                    animationIn: "fadeInUp",
+                    animationOut: "fadeOutDown",
+                    buttons: [
+                        {
+                            text: "cancel",
+                            textStyle: {
+                                color: "#383838",
+                            },
+                        },
+                        {
+                            text: "welcomePageRegister",
+                            onPress: (e) => {
+                                navigation.navigate("RegisterPage");
+                            },
+                        },
+                        {
+                            text: "welcomePageLogin",
+                            onPress: (e) => {
+                                navigation.navigate("LoginPage");
+                            },
+                        },
+                    ],
+                };
+                dispatch(ShowModal(loginModalData));
+            } else {
+                navigation.navigate("DeliveryDetails");
+            }
+        }
     };
 
     return (
@@ -61,17 +103,21 @@ const Cart = (props) => {
 
                 <View style={styles.items}>
                     {
-                        state.cartItems?.size === 0 ?
-                            <OurText style={styles.emptyText}
-                                translate={true}>cartEmpty</OurText>
-                        : <></>
+                        state.loading ?
+                            <OurActivityIndicator />
+                        :
+                            state.productList.size === 0 ?
+                                <OurText style={styles.emptyText}
+                                    translate={true}>cartEmpty</OurText>
+                            : <></>
+                        
                     }
-                    <MemoedLocallyAnimatedFlatList data={Array.from(state.cartItems.values())}/>
-                    <CartTotal total={state.cartTotalPrice} />
+                    <MemoedLocallyAnimatedFlatList data={Array.from(state.productList.values())}/>
+                    <CartTotal total={state.total} />
                     <View style={styles.bottomContainer}>
                     <OurTextButton
                         translate={true}
-                        disabled={!state.cartItems.size}
+                        disabled={!state.productList.size}
                         onPress={toDeliveryDetails}
                         style={styles.checkoutButton}
                         textStyle={{color: gradEnd}}

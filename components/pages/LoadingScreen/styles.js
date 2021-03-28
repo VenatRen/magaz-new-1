@@ -9,6 +9,11 @@ const styles = StyleSheet.create({
         bottom: 0,
         minHeight: "100%",
     },
+    mainContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
 
 export default styles;

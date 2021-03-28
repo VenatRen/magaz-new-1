@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Image, TouchableOpacity } from "react-native";
-import { addImageToDB, getImageFromDB } from "~/db_handler";
+
+import { addImageToDB, getImageFromDB } from "~/utils/db_handler";
+
 import OurText from "~/components/OurText";
 import styles from "./styles";
 

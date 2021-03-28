@@ -9,7 +9,7 @@ const CartTotal = (props) => {
 
     return (
         <View style={styles.container}>
-            <OurText style={styles.text} params={{total, currency: "$"}}>cartTotal</OurText>
+            <OurText style={styles.text} params={{total}}>cartTotal</OurText>
         </View>
     );
 };

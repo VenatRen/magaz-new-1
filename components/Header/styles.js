@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         height: 40.5,
     },
     iconCart: {
-        width: 49.5,
+        width: 64,
         height: 40.5,
         flexDirection: "column",
         alignItems: "center",

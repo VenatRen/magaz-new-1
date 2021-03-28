@@ -1,11 +1,16 @@
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { FlatList } from "react-native";
-import { useQuery } from "@apollo/client";
 import { LinearGradient } from 'expo-linear-gradient';
-import { stateContext, dispatchContext } from "~/contexts";
-import { ShowModal } from "~/actions";
-import { QUERY_CATEGORY_LIST } from '~/queries';
+
+import { useDispatch, useSelector } from "react-redux";
+import { FetchCartProductList } from "~/redux/CartReducer/actions";
+import { useQuery } from "@apollo/client";
+import { QUERY_CATEGORY_LIST } from '~/apollo/queries';
+import { ShowModal } from "~/redux/ModalReducer/actions";
+
 import { expo } from "~/app.json";
+import SyncStorage from "sync-storage";
+
 import { HeaderTitle, HeaderCartButton } from "~/components/Header";
 import OurActivityIndicator from "~/components/OurActivityIndicator";
 import CategoryItem from "./CategoryItem";
@@ -15,8 +20,8 @@ import styles from "./styles";
 /**Список категорий товаров*/
 const CategoryList = (props) => {
     const { navigation } = props;
-    const state = useContext(stateContext);
-    const dispatch = useContext(dispatchContext);
+    const state = useSelector(state=>state);
+    const dispatch = useDispatch();
     const [gradStart, gradEnd] = ["#65B7B9", "#078998"];
     const abortController = new AbortController();
 
@@ -31,6 +36,8 @@ const CategoryList = (props) => {
             }]
         };
         dispatch(ShowModal(data));
+        SyncStorage.set("bearer-token", null);
+        SyncStorage.set("user-uuid", null);
     };
 
     useLayoutEffect( () => {
@@ -44,6 +51,41 @@ const CategoryList = (props) => {
         });
     }, [navigation]);
 
+    useEffect( () => {
+        const token = SyncStorage.get("bearer-token");
+        
+        if ( token ) {
+            dispatch(FetchCartProductList);
+        } else {
+            const data = {
+                title: { text: "cartLoginTitle", params: {} },
+                text: { text: "cartLoginMessage", params: {} },
+                animationIn: "fadeInUp",
+                animationOut: "fadeOutDown",
+                buttons: [
+                    {
+                        text: "welcomePageContinue",
+                        textStyle: {
+                            color: "#383838",
+                        },
+                    },
+                    {
+                        text: "welcomePageRegister",
+                        onPress: (e) => {
+                            navigation.navigate("RegisterPage");
+                        },
+                    },
+                    {
+                        text: "welcomePageLogin",
+                        onPress: (e) => {
+                            navigation.navigate("LoginPage");
+                        },
+                    },
+                ],
+            };
+            dispatch(ShowModal(data));
+        }
+    }, []);
 
     const { loading, error, data, refetch } = useQuery(QUERY_CATEGORY_LIST, {
         variables: { hideEmpty: true },

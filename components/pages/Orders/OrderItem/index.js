@@ -1,13 +1,15 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Animated, View, TouchableOpacity, LayoutAnimation } from "react-native";
-import { dispatchContext } from "~/contexts";
-import { ChangeOrderStatus, DeleteOrder } from "~/actions";
-import { STORE_ADDRESS } from "~/config";
+import { useDispatch } from "react-redux";
+
+import { ChangeOrderStatus, DeleteOrder } from "~/redux/OrdersReducer/actions";
+import { statusToText, ORDER_STATUS_CANCELED } from "../orderStates";
+import { STORE_ADDRESS } from "~/utils/config";
+
 import OurText from "~/components/OurText";
 import OurTextButton from "~/components/OurTextButton";
 import OurImage from "~/components/OurImage";
 import OurImageSlider from "~/components/OurImageSlider";
-import { statusToText, ORDER_STATUS_CANCELED } from "../orderStates";
 import styles from "./styles";
 
 const MAX_IMAGES = 4;
@@ -21,7 +23,7 @@ const linear = LayoutAnimation.create(
 );
 
 const OrderItem = (props) => {
-    const dispatch = useContext(dispatchContext);
+    const dispatch = useDispatch();
     const { data, navigation } = props;
     const opacity = useRef(new Animated.Value(1)).current;
     const [height, setHeight] = useState(null);

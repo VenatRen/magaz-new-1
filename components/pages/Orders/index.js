@@ -1,7 +1,8 @@
-import React, { useState, useContext, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { Animated, FlatList, View } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { stateContext } from "~/contexts";
+import {useSelector} from "react-redux";
+
 import { HeaderBackButton, HeaderCartButton, HeaderTitle } from "~/components/Header/index";
 import OurText from "~/components/OurText";
 import OurTextButton from "~/components/OurTextButton";
@@ -30,7 +31,7 @@ const LocallyAnimatedFlatList = ({data, navigation}) => {
 const MemoedLocallyAnimatedFlatList = React.memo(LocallyAnimatedFlatList);
 
 const Orders = (props) => {
-    const state = useContext(stateContext);
+    const state = useSelector(state=>state);
     const { navigation } = props;
 
     const [gradStart, gradEnd] = ["#931DC4", "#F33BC8"];

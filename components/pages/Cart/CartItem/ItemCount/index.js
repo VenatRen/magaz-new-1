@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Dimensions, Alert } from "react-native";
 import { faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { dispatchContext } from "~/contexts";
 import { useTranslation } from "react-i18next";
+import {useDispatch} from "react-redux";
+
+
 import OurIconButton from "~/components/OurIconButton";
 import styles from "./styles";
 
@@ -18,7 +20,7 @@ const size = Math.max(Dimensions.get("window").width, Dimensions.get("window").h
 
 /** Компонент, который отображает количество товаров в корзине */
 const ItemCount = (props) => {
-    const dispatch = useContext(dispatchContext);
+    const dispatch = useDispatch()
     const { productId, quantity, onRemove } = props;
     const { t } = useTranslation();
 

@@ -1,12 +1,17 @@
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import "react-native-get-random-values";
+
+import { useDispatch, useSelector } from "react-redux";
+
 import { v4 as uuidv4 } from 'uuid';
-import { stateContext, dispatchContext } from "~/contexts";
-import { AddOrderToList, ClearCart, ClearDeliveryDetails } from "~/actions";
-import { HeaderBackButton, HeaderTitle, HeaderCartButton } from "~/components/Header";
+
+import { ClearCart } from "~/redux/CartReducer/actions";
+import { MakeOrder } from "~/redux/OrdersReducer/actions";
+import { ClearDeliveryDetails } from "~/redux/DeliveryDetailsReducer/actions";
 import { ORDER_STATUS_TO_BE_SHIPPED } from "~/components/pages/Orders/orderStates";
+
+import { HeaderBackButton, HeaderTitle, HeaderCartButton } from "~/components/Header";
 import OurText from "~/components/OurText";
 import OurTextButton from "~/components/OurTextButton";
 import styles from "./styles";
@@ -22,8 +27,8 @@ const DeliveryDetailsItem = (props) => {
 }
 
 const DeliveryDetailsCheck = (props) => {
-    const state = useContext(stateContext);
-    const dispatch = useContext(dispatchContext);
+    const state = useSelector(state=>state.deliveryDetailsReducer);
+    const dispatch = useDispatch();
     const { navigation } = props;
     const { data, isOrderMade } = props.route.params;
 
@@ -47,22 +52,20 @@ const DeliveryDetailsCheck = (props) => {
     const makeAnOrder = (e) => {
         const orderData = {
             deliveryDetails: {
-                name: state.deliveryDetails.name.value,
+                firstname: state.deliveryDetails.firstname.value,
+                lastname: state.deliveryDetails.lastname.value,
                 email: state.deliveryDetails.email.value,
                 phone: state.deliveryDetails.phone.value,
                 address: state.deliveryDetails.address.value,
-                floor: state.deliveryDetails.floor.value,
+                postcode: state.deliveryDetails.postcode.value,
                 notes: state.deliveryDetails.notes.value,
-                time: state.deliveryDetails.time.value,
             },
             uuid: uuidv4(),
             status:  ORDER_STATUS_TO_BE_SHIPPED,
-            products: state.cartItems,
-            totalPrice: state.cartTotalPrice,
         };
-        dispatch(AddOrderToList(orderData));
-        dispatch(ClearCart());
-        dispatch(ClearDeliveryDetails());
+        //dispatch(MakeOrder(orderData));
+        //dispatch(ClearCart());
+        //dispatch(ClearDeliveryDetails());
         navigation.popToTop();
         navigation.navigate("Orders");
     };
@@ -80,7 +83,9 @@ const DeliveryDetailsCheck = (props) => {
             </View>
             <ScrollView>
                 <DeliveryDetailsItem field={"orderFormName"}
-                                     text={data.name}/>
+                                     text={data.firstname}/>
+                <DeliveryDetailsItem field={"orderFormLastName"}
+                                     text={data.lastname}/>
                 <DeliveryDetailsItem field={"orderFormEmail"}
                                      text={data.email}/>
                 <DeliveryDetailsItem field={"orderFormPhone"}

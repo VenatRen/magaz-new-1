@@ -23,6 +23,7 @@
     "expo-linear-gradient": "~8.3.0",
     "expo-localization": "~9.0.0",
     "expo-sqlite": "~8.4.0",
+    "global-agent": "^2.1.12",
     "graphql": "^15.4.0",
     "i18next": "^19.3.3",
     "install": "^0.13.0",
@@ -46,12 +47,22 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "12.1.0",
     "react-native-web": "^0.11.4",
+    "react-redux": "^7.2.3",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "sync-storage": "^0.4.2",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
+    "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-root-import": "^6.6.0",
     "babel-preset-expo": "~8.0.0"
+  },
+  "devServer": {
+    "proxy": {
+      "*": "http://192.168.0.115:5050"
+    }
   },
   "private": true
 }

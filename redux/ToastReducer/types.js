@@ -1,0 +1,3 @@
+export const TOAST_ADD = "TOAST/ADD";
+export const TOAST_DELETE = "TOAST/DELETE";
+export const TOAST_CHANGE_DURATION = "TOAST/CHANGE_DURATION";

@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     infoBottomContainer: {
+        height: 48,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
@@ -44,7 +45,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     buyButton: {
-        paddingHorizontal: 80,
     },
     buyButtonText: {
         color: "#078998",
@@ -58,7 +58,11 @@ const styles = StyleSheet.create({
     descriptionText: {
         color: "#ffffff",
         fontSize: 18,
-    }
+    },
+    buy: {
+        flex: .9,
+        justifyContent: "center"
+    },
 });
 
 export default styles;

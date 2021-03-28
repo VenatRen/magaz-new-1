@@ -7,13 +7,29 @@ import styles from "./styles";
 const ANIMATION_DURATION = 500;
 
 const OurActivityIndicator = (props) => {
-    const { error, abortController, doRefresh, translate, params, buttonTextColor } = props;
-    const [opacity] = useState(new Animated.Value(0));
-    const [posX] = useState(new Animated.Value(Dimensions.get("screen").width));
+    const { error, abortController, doRefresh, buttonTextColor, size, oneState } = props;
+    const opacity = useRef(new Animated.Value(0)).current;
+    const posX = useRef(new Animated.Value(Dimensions.get("screen").width)).current;
+
+    const textAnim = useRef(new Animated.Value(0)).current;
     
     const [aborted, setAborted] = useState(false);
 
     useEffect(() => {
+        setTimeout(() => {
+            Animated.timing(textAnim, {
+                toValue: 1,
+                easing: Easing.easeIn,
+                duration: ANIMATION_DURATION,
+                useNativeDriver: true,
+            }).start();
+        }, 1500);
+
+    }, []);
+
+    useEffect(() => {
+        if ( oneState ) return;
+
         Animated.timing(opacity, {
             toValue: 1,
             duration: ANIMATION_DURATION,
@@ -29,15 +45,22 @@ const OurActivityIndicator = (props) => {
     }, [error, aborted])
 
     const onLongPress = (e) => {
-        if ( abortController && !abortController.signal.aborted ) {
+        if ( abortController && !abortController.signal.aborted && !oneState ) {
             abortController.abort();
             setAborted(true);
         }
     };
+
+    const textPosY = textAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [64, 0],
+        extrapolate: "clamp",
+    });
+
     return (
         <View style={styles.container}>
             {
-                aborted ?
+                aborted && !oneState ?
                     <Animated.View style={{opacity, transform: [{ translateX: posX }]}}>
                         <OurText translate={true} style={styles.abortText}>activityAborted</OurText>
                         <OurTextButton onPress={(e)=>{
@@ -45,7 +68,7 @@ const OurActivityIndicator = (props) => {
                             doRefresh();
                         }} translate={true} textStyle={{color: buttonTextColor, paddingHorizontal: 32}}>activityRefresh</OurTextButton>
                     </Animated.View>
-                    : error ?
+                    : error && !oneState ?
                     <Animated.View style={{opacity, transform: [{ translateX: posX }]}}>
                         <OurText translate={true} style={styles.abortText}>activityError</OurText>
                         <OurTextButton onPress={(e)=>{
@@ -54,7 +77,15 @@ const OurActivityIndicator = (props) => {
                     </Animated.View>
                     :
                         <TouchableOpacity onLongPress={onLongPress} delayLongPress={100}>
-                            <ActivityIndicator style={styles.indicator} color={"#fff"} size={64}/>
+                            <ActivityIndicator size={size || 64} style={styles.indicator} color={"#fff"}/>
+                            {
+                                !oneState ?
+                                    <Animated.View style={{ opacity: textAnim, transform: [ { translateY: textPosY } ] }}>
+                                        <OurText style={styles.abortText} translate={true}>activityLoading</OurText>
+                                    </Animated.View>
+                                :
+                                    <></>
+                            }
                         </TouchableOpacity>
             }
         </View>

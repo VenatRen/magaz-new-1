@@ -1,13 +1,18 @@
-import React, { useContext, useState } from "react";
-import { View, TouchableOpacity, Dimensions, Animated } from "react-native";
+import React, { useState } from "react";
+import { View, Dimensions, Animated } from "react-native";
+
 import { useTranslation } from "react-i18next";
-import { STORE_ADDRESS } from "~/config";
-import { dispatchContext } from "~/contexts";
-import { AddProductToCart } from "~/actions";
-import { ListAnimation } from "~/Animations";
+import { useDispatch, useSelector } from "react-redux";
+import { AddProductToCart } from "~/redux/CartReducer/actions";
+
+import { STORE_ADDRESS } from "~/utils/config";
+import { HTML_PATTERN }  from "~/utils/patterns";
+import { ListAnimation } from "./animation";
+
 import OurText from "~/components/OurText";
 import OurImage from "~/components/OurImage";
 import OurTextButton from "~/components/OurTextButton";
+import OurActivityIndicator from "~/components/OurActivityIndicator";
 import GalleryImg from "~/components/Gallery";
 import OurPicker from "~/components/OurPicker";
 import OurImageSlider from "~/components/OurImageSlider";
@@ -23,10 +28,12 @@ const itemHeight2 = itemHeight + 16;
 /** Список товаров той или иной категории */
 const ProductsItem = (props) => {
     const { data, y, index, name, imageUrl } = props;
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [isModalVisible, setModalVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const dispatch = useContext(dispatchContext);
+    const state = useSelector(state=>state);
+    const dispatch = useDispatch();
 
     const itemAttributes = data?.attributes?.nodes || [];
     const url = data?.image?.mediaDetails?.file ? `${STORE_ADDRESS}wp-content/uploads/${data?.image?.mediaDetails?.file}` : null;
@@ -39,31 +46,16 @@ const ProductsItem = (props) => {
     };
 
     // Обрабатываем нажатие на кнопку "Купить"
-    const buyProduct = (e, data) => {
-
+    const buyProduct = (e) => {
         const productQuantity = 1;
-        const price = data.price ? data.price.match(/([0-9]*)\.?([0-9]?)/)[0] : 0;
 
-        // Заносим данные
-        let payload = {
-            productId: data.databaseId,
-            name: data.name,
-            productQuantity: productQuantity,
-            price: price,
-            stockQuantity: data.stockQuantity || 99,
-            selectedVariants: [
-                "variantID",
-            ],
-            imageLink: data.image?.mediaDetails?.file,
-        };
-        // Добавляем в корзину
-        dispatch(AddProductToCart(payload, dispatch, t));
+        dispatch(AddProductToCart(data.databaseId, name, productQuantity, setLoading));
     };
 
     const [translate, scale, opacity] = ListAnimation(y, totalHeight, itemHeight2, itemWidth, index);
 
     return (
-        <Animated.View style={[styles.mainContainer, {height: itemHeight}, { opacity, transform: [{ translateX: translate }, { translateY: translate }, { scale }] }]}>
+        <Animated.View style={[styles.mainContainer, {height: itemHeight}, { opacity, transform: [{ translateX: translate }, { scale }] }]}>
             <View style={styles.titleContainer}>
                 <OurText style={styles.title}>{name}</OurText>
             </View>
@@ -91,15 +83,22 @@ const ProductsItem = (props) => {
                              params={{
                                  price: ( data.price === 0 || !data.price ) ? t("productFree") : data.price
                              }}>productPrice</OurText>
-                    <OurTextButton style={styles.buyButton}
-                                   textStyle={styles.buyButtonText}
-                                   translate={true}
-                                   onPress={(e) => buyProduct(e, data)}
-                    >productBuy</OurTextButton>
+                    <View style={styles.buy} >
+                    {
+                        !loading ?
+                            <OurTextButton style={styles.buyButton}
+                                        textStyle={styles.buyButtonText}
+                                        translate={true}
+                                        onPress={(e) => buyProduct(e)}
+                            >productBuy</OurTextButton>
+                        :
+                        <OurActivityIndicator oneState={true} size={48} color={"#fff"}/>
+                    }
+                    </View>
                 </View>
             </View>
             <View style={styles.descriptionContainer}>
-                <OurText style={styles.descriptionText}>{data.description?.replace(/<\/*.+?\/*>/gi, "") || ""}</OurText>
+                <OurText style={styles.descriptionText}>{data.description?.replace(HTML_PATTERN, "") || ""}</OurText>
             </View>
         </Animated.View>
     );

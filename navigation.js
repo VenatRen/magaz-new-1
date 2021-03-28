@@ -7,7 +7,8 @@ import Cart from "./components/pages/Cart";
 import ProductList from "./components/pages/ProductsList";
 import DeliveryDetails from "./components/pages/DeliveryDetails";
 import DeliveryDetailsCheck from "./components/pages/DeliveryDetailsCheck";
-import UserCheck from "./components/pages/UserCheck";
+import RegisterPage from "./components/pages/RegisterPage";
+import LoginPage from "./components/pages/LoginPage";
 import Orders from "./components/pages/Orders";
 
 const { Navigator, Screen } = createNativeStackNavigator();
@@ -32,6 +33,12 @@ const AppStackNavigator = () => {
                 headerHideShadow: true,
             }}>
             <Screen 
+                name="RegisterPage"
+                component={RegisterPage}/>
+            <Screen 
+                name="LoginPage"
+                component={LoginPage}/>
+            <Screen 
                 name="CategoryList"
                 component={CategoryList}/>
             <Screen 
@@ -46,9 +53,6 @@ const AppStackNavigator = () => {
             <Screen 
                 name="DeliveryDetailsCheck"
                 component={DeliveryDetailsCheck}/>
-            <Screen 
-                name="UserCheck"
-                component={UserCheck}/>
             <Screen 
                 name="Orders"
                 component={Orders}/>

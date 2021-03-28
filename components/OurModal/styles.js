@@ -26,10 +26,22 @@ const styles = StyleSheet.create({
     },
     bottomContainer: {
         flexDirection: "row",
+        flexWrap: "wrap",
         alignSelf: "flex-end",
     },
     button: {
         borderRadius: 1,
+        paddingHorizontal: 10,
+        margin: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0,
+        shadowRadius: 0,
+
+        elevation: 0,
         backgroundColor: null,
     },
     buttonText: {
