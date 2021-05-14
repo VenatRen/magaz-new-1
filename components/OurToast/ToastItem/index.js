@@ -7,32 +7,23 @@ import OurText from "~/components/OurText";
 import styles from "./styles";
 
 const ANIMATION_DURATION = 200;
-const TOAST_HEIGHT_MIN = .00001;
-const TOAST_HEIGHT_MAX = 64;
-
-const easeInEaseOut = LayoutAnimation.create(
-    ANIMATION_DURATION,
-    LayoutAnimation.Types.easeInEaseOut,
-    LayoutAnimation.Properties.scaleY,
-);
+const TOAST_HEIGHT_MIN = 0;
+const TOAST_HEIGHT_MAX = 48;
 
 const ToastItem = (props) => {
-    const { id, duration, text, icon, color, translate } = props;
+    const { id, duration, text, icon, color, translate, postDelete } = props;
     const dispatch = useDispatch();
     const [timer, setTimer] = useState(null);
-    const [height, setHeight] = useState(TOAST_HEIGHT_MIN);
     const anim = useRef(new Animated.Value(0)).current;
     //const posX = useRef(new Animated.Value(Dimensions.get("screen").width)).current;
     
     // Анимация появления
     const animIn = () => {
-        // Анимируем высоту
-        LayoutAnimation.configureNext(easeInEaseOut);
-        setHeight(TOAST_HEIGHT_MAX);
-        
+
         // Запускаем анимацию
         Animated.timing(anim, {
             toValue: 1,
+            easing: Easing.bounce,
             duration: ANIMATION_DURATION,
             useNativeDriver: true,
         }).start();
@@ -40,10 +31,6 @@ const ToastItem = (props) => {
 
     // Анимация исчезновения
     const animOut = () => {
-        // Анимируем высоту
-        LayoutAnimation.configureNext(easeInEaseOut);
-        setHeight(TOAST_HEIGHT_MIN);
-        
         // Запускаем анимацию
         Animated.timing(anim, {
             toValue: 2,
@@ -52,6 +39,8 @@ const ToastItem = (props) => {
         }).start( () => {
             // Удаляем элемент после окончания анимации
             dispatch(DeleteToast(id));
+            if ( postDelete )
+                postDelete();
         } );
     };
 
@@ -68,20 +57,21 @@ const ToastItem = (props) => {
 
     }, [duration]);
 
-    const screenWidth = Dimensions.get("screen").width;
+    const screenHeight = Dimensions.get("screen").height;
     const opacity = anim.interpolate({
-        inputRange: [0, 1, 2],
+        inputRange: [0, 1, 1.2],
         outputRange: [0, 1, 0],
         extrapolateRight: "clamp",
     });
-    const translateX = anim.interpolate({
+    const translateY = anim.interpolate({
         inputRange: [0, 1, 2],
-        outputRange: [screenWidth, 0, -screenWidth],
+        outputRange: [screenHeight, 0, -screenHeight],
         extrapolateRight: "clamp",
     });
 
     return (
-        <Animated.View style={[styles.mainContainer, {height, opacity, transform: [{ translateX }] }]}>
+        <Animated.View style={[styles.mainContainer, {height: TOAST_HEIGHT_MAX, opacity, transform: [{ translateY }] }]}>
+            <View style={{position: "absolute", backgroundColor: color, height: TOAST_HEIGHT_MAX, width: 16, left: 0}}/>
             <>
             {
                 icon ?

@@ -24,7 +24,7 @@ export const FetchCartProductList = async (dispatch) => {
             icon: faShoppingBasket,
             text: i18n.t("activityError"),
             duration: 3000,
-            color: "#499eda",
+            color: "#fc0341",
         };
         dispatch(AddToast(toast, "CART_FETCH_ERROR"));
     }
@@ -69,7 +69,7 @@ export const AddProductToCart = (productId, productName, quantity=1, setLoading=
             icon: faShoppingBasket,
             text: i18n.t("activityError2"),
             duration: 3000,
-            color: "#499eda",
+            color: "#fc0341",
         };
         dispatch(AddToast(toast, "PRODUCT_ADDING_ERROR"));
         setLoading(false);

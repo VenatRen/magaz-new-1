@@ -52,6 +52,7 @@ const en = {
         ordersTitle: "Orders",
         ordersEmpty: "There's too empty here(",
         
+        orderAdded: "Your order has been placed!",
         orderInfoCheck: "Please, check your order information.",
         orderInfoCheckEdit: "Edit info",
         orderInfoCheckOrder: "Make an order",
@@ -77,6 +78,7 @@ const en = {
         productPrice: "Price: {{price}}",
         productFree: "Free",
         productBuy: "Buy",
+        productQuantity: "Quantity",
         productAddedMessage: "{{product}} added to your cart!",
         productsPickerSearch: "Search...",
 

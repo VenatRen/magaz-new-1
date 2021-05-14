@@ -52,6 +52,7 @@ const ru = {
         ordersTitle: "Заказы",
         ordersEmpty: "Здесь пусто(",
         
+        orderAdded: "Ваш заказ размещён!",
         orderInfoCheck: "Пожалуйста, проверьте информацию.",
         orderInfoCheckEdit: "Редактировать",
         orderInfoCheckOrder: "Оформить заказ",
@@ -78,6 +79,7 @@ const ru = {
         productPrice: "Цена: {{price}}",
         productFree: "Бесплатно",
         productBuy: "Купить",
+        productQuantity: "Количество",
         productAddedMessage: "Товар {{product}} добавлен в вашу корзину!",
         productsPickerSearch: "Найти...",
 

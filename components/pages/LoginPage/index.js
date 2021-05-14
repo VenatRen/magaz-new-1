@@ -33,7 +33,7 @@ const LoginPage = (props) => {
             text: "activityError",
             translate: true,
             duration: 3000,
-            color: gradEnd,
+            color: "#fc0341",
         };
         dispatch(AddToast(toast, "LOGIN_MUTATION_ERROR"));
         console.log("ERROR LOGINING IN CUSTOMER:", err);

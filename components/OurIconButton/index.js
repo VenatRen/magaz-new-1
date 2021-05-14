@@ -6,7 +6,7 @@ import styles from "./styles";
 const LONG_PRESS_DELAY = 150;
 
 const OurIconButton = (props) => {
-    const { onPress, doLongPress, longPressDelay, icon, size, children, style } = props;
+    const { onPress, doLongPress, longPressDelay, icon, size, children, style, color } = props;
     const [timer, setTimer] = useState(null);
     
     const clearTimer = () => {
@@ -30,7 +30,7 @@ const OurIconButton = (props) => {
 
     return (
         <TouchableOpacity onPress={onPress} onLongPress={onLongPress} onPressOut={onPressOut} style={ [styles.button, style] }>
-            <FontAwesomeIcon size={size} color={"#fff"} icon={icon}/>
+            <FontAwesomeIcon size={size} color={color || "#fff"} icon={icon}/>
             {children}
         </TouchableOpacity>
     );

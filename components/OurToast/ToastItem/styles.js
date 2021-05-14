@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         overflow: "hidden",
 
         backgroundColor: "#fffe",
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         marginVertical: 4,
 
-        borderRadius: 32,
+        borderRadius: 8,
         elevation: 2,
     },
     iconContainer: {

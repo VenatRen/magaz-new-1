@@ -13,6 +13,18 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
         overflow: "hidden",
     },
+    counterContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 8,
+    },
+    deleteButton: {
+        backgroundColor: "#fff",
+        padding: 8,
+        borderRadius: 100,
+        marginLeft: 8,
+    },
     itemName: {
         color: "#FFF",
         fontSize: 18,
@@ -30,13 +42,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        paddingHorizontal: 8,
         overflow: "hidden",
     },
     itemPrice: {
         color: "#FFF",
         fontSize: 17,
         marginHorizontal: 0,
-        textAlign: "right",
         overflow: "hidden",
     },
     itemCount: {

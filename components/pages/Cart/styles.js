@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     checkoutButton: {
-        width: Dimensions.get("window").width - 16,
         width: "100%",
         left: 0,
         right: 0,

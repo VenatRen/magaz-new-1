@@ -40,7 +40,7 @@ const RegisterPage = (props) => {
             text: "activityError",
             translate: true,
             duration: 3000,
-            color: gradEnd,
+            color: "#fc0341",
         };
         dispatch(AddToast(toast, "REG_MUTATION_ERROR"));
         console.log("ERROR REGISTERING CUSTOMER:", err);

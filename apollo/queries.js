@@ -130,6 +130,7 @@ export const MUTATION_CHECKOUT = gql`
         checkout( input: {
             clientMutationId: $clientMutationId,
             isPaid: $isPaid,
+            paymentMethod: $paymentMethod,
             billing: {
                 address1: $address,
                 email: $email,
@@ -140,9 +141,6 @@ export const MUTATION_CHECKOUT = gql`
             }
         } ) {
             clientMutationId
-            order {
-                id
-            }
         }
     }
 `;

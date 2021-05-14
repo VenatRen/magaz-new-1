@@ -117,11 +117,11 @@ const Cart = (props) => {
                     <View style={styles.bottomContainer}>
                     <OurTextButton
                         translate={true}
-                        disabled={!state.productList.size}
+                        disabled={!state.productList.size || state.loading}
                         onPress={toDeliveryDetails}
                         style={styles.checkoutButton}
                         textStyle={{color: gradEnd}}
-                        >cartCheckout</OurTextButton>
+                        >{state.loading ? "activityLoading" : "cartCheckout"}</OurTextButton>
                     </View>
                 </View>
         </>
