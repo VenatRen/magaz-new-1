@@ -60,7 +60,7 @@ const Cart = (props) => {
 
     const toDeliveryDetails = (e) => {
         if ( state.productList?.size ) {
-            if ( !SyncStorage.get("bearer-token") ) {
+            if ( !SyncStorage.get("session") ) {
                 const loginModalData = {
                     title: { text: "cartLoginTitle", params: {} },
                     text: { text: "cartLoginMessage", params: {} },
