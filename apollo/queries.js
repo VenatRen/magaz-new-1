@@ -104,13 +104,14 @@ export const MUTATION_LOGIN_USER = gql`
     }
 `;
 
-export const MUTATION_CREATE_ORDER = gql`
-    mutation CreateOrder($clientMutationId: String!, $customerId: Int!) {
-        createOrder(input:{clientMutationId: $clientMutationId, customerId: $customerId}){
-            clientMutationId
-            order {
-                orderKey
-            }
+export const MUTATION_REFRESH_TOKEN = gql`
+    mutation RefreshAuthToken( $clientMutationId: String!, $jwtRefreshToken: String! ) {
+        refreshJwtAuthToken(
+            input: {
+                clientMutationId: $clientMutationId
+                jwtRefreshToken: $jwtRefreshToken,
+        }) {
+            authToken
         }
     }
 `;

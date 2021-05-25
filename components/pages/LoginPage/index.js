@@ -16,6 +16,7 @@ import OurTextField from "~/components/OurTextField";
 import OurActivityIndicator from "~/components/OurActivityIndicator";
 import OurTextButton from "~/components/OurTextButton";
 import styles from "./styles";
+import { AUTH_TOKEN_EXPIRE_TIME } from "~/utils/config";
 
 const LoginPage = (props) => {
     const { navigation } = props;
@@ -43,6 +44,7 @@ const LoginPage = (props) => {
         SyncStorage.set("user-uuid", customerId);
         SyncStorage.set("auth", data.login.authToken);
         SyncStorage.set("refresh-auth", data.login.refreshToken);
+        SyncStorage.set("auth-expires-at", Date.now() + AUTH_TOKEN_EXPIRE_TIME);
         navigation.popToTop();
     };
 
