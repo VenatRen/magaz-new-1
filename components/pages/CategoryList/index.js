@@ -36,7 +36,8 @@ const CategoryList = (props) => {
             }]
         };
         dispatch(ShowModal(data));
-        SyncStorage.set("bearer-token", null);
+        SyncStorage.set("session", null);
+        SyncStorage.set("auth", null);
         SyncStorage.set("user-uuid", null);
     };
 
@@ -52,7 +53,7 @@ const CategoryList = (props) => {
     }, [navigation]);
 
     useEffect( () => {
-        const token = SyncStorage.get("bearer-token");
+        const token = SyncStorage.get("session");
         
         if ( token ) {
             dispatch(FetchCartProductList);

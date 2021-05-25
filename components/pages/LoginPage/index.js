@@ -41,6 +41,8 @@ const LoginPage = (props) => {
     const onCompleted = (data) => {
         console.log("USER LOGGED IN", data);
         SyncStorage.set("user-uuid", customerId);
+        SyncStorage.set("auth", data.login.authToken);
+        SyncStorage.set("refresh-auth", data.login.refreshToken);
         navigation.popToTop();
     };
 
