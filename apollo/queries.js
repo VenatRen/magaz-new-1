@@ -151,7 +151,9 @@ export const MUTATION_ADD_TO_CART = gql`
             cartItem {
                 key
                 product {
-                    name
+                    node {
+                        name
+                    }
                 }
                 quantity
                 subtotal
@@ -170,13 +172,15 @@ export const QUERY_GET_CART = gql`
                 nodes {
                     key
                     product {
-                        databaseId
-                        name
-                        image {
-                            mediaDetails {
-                                file
+                        node {
+                            databaseId
+                            name
+                            image {
+                                mediaDetails {
+                                    file
+                                }
                             }
-                        }   
+                        }
                     }
                     quantity
                     total
