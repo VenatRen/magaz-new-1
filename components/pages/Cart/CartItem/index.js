@@ -45,7 +45,9 @@ const CartItem = (props) => {
         if ( typeof quantity === "string")
             quantity = Number(quantity.replace(/[^0-9]/g, ''));
 
-        setQuantity(Math.clamp(quantity, MIN_QUANTITY, MAX_QUANTITY));
+        if ( quantity < MIN_QUANTITY || quantity > MAX_QUANTITY ) return;
+
+        setQuantity(quantity);
 
         if ( timer ) {
             clearTimeout(timer);
