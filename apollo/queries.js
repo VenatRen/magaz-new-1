@@ -206,3 +206,23 @@ export const MUTATION_DELETE_PRODUCT_FROM_CART = gql`
         }
     }
 `;
+
+export const QUERY_GET_ORDERS = gql`
+    query getOrders {
+        orders {
+            nodes {
+                databaseId
+                orderKey
+                total
+                lineItems {
+                    nodes {
+                        product {
+                            name
+                        }
+                    }
+                }
+                status
+            }
+        }
+    }
+`;
