@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Dimensions, Animated } from "react-native";
+import { View, Dimensions, Animated, TouchableOpacity } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -77,9 +77,11 @@ const ProductsItem = (props) => {
 
     return (
         <Animated.View style={[styles.mainContainer]}>
+            <TouchableOpacity onPress={() => navigation.navigate("ProductInfo", { name, imageUrl: url, id: data.databaseId })}>
             <View style={styles.titleContainer}>
                 <OurText style={styles.title}>{name}</OurText>
             </View>
+            </TouchableOpacity>
             <View style={styles.infoContainer}>
                 <View style={styles.infoTopContainer}>
                     <OurImage url={url}
