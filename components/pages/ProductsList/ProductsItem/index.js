@@ -84,19 +84,7 @@ const ProductsItem = (props) => {
             </TouchableOpacity>
             <View style={styles.infoContainer}>
                 <View style={styles.infoTopContainer}>
-                    <OurImage url={url}
-                              onPress={toggleModal} />
-                    <View style={styles.attributesContainer}>
-                        {
-                            itemAttributes.length !== 0 ?
-                                itemAttributes.map( (attr, i) => {
-                                    return <OurPicker data={attr} key={i}/>
-                                })
-                            :
-                                <></>
-                        }
-                    </View>
-                    <OurImageSlider data={images} isModalVisible={isModalVisible} toggleModal={toggleModal} />
+                    <OurImage url={url} disabled={true} />
                 </View>
                 <View style={styles.infoMiddleContainer}>
                     <GalleryImg data={data?.galleryImages?.nodes}/>
@@ -118,7 +106,7 @@ const ProductsItem = (props) => {
                                         textStyle={styles.buyButtonText}
                                         translate={true}
                                         onPress={(e) => buyProduct(e)}
-                            >productBuy</OurTextButton>
+                            >productAddToCart</OurTextButton>
                         :
                         <OurActivityIndicator oneState={true} size={48} color={"#fff"}/>
                     }

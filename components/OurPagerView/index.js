@@ -4,9 +4,9 @@ import { FlatList } from "react-native";
 const OurPagerView = (props) => {
     const { style, contentContainerStyle, children, horizontal } = props;
 
-    const renderItem = ({item}) => {
+    const renderItem = ({ item }) => {
         return item;
-    }
+    };
 
     return (
         <FlatList style={style}
@@ -14,8 +14,8 @@ const OurPagerView = (props) => {
                   horizontal={horizontal}
                   pagingEnabled={true}
                   persistentScrollbar={true}
-                  data={children?.length ? children : [children] }
-                  renderItem={renderItem} />
+                  data={children?.length ? children : [children]}
+                  renderItem={renderItem}/>
     )
 };
 
