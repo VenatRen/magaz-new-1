@@ -69,17 +69,13 @@ export const QUERY_PRODUCT_LIST = gql`
             nodes {
                 databaseId
                 name
-                description
+                shortDescription(format: RAW)
                 image {
-                    mediaDetails {
-                        file
-                    }
+                    sourceUrl
                 }
                 galleryImages {
                     nodes {
-                        mediaDetails {
-                            file
-                        }
+                        sourceUrl
                     }
                 }
                 ... on VariableProduct {
