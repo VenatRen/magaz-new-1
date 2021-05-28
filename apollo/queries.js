@@ -83,6 +83,7 @@ export const QUERY_PRODUCT_LIST = gql`
                     }
                 }
                 ... on VariableProduct {
+                    price
                     variations {
                         nodes {
                             price
