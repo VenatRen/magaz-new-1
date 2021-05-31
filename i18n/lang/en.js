@@ -60,6 +60,7 @@ const en = {
         orderFormLastName: "Last name",
         orderFormPhone: "Phone number",
         orderFormEmail: "E-mail",
+        orderFormCountry: "Country",
         orderFormAddress: "Address",
         orderFormNotes: "Notes",
         orderFormPostcode: "Post code",

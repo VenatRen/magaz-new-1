@@ -60,6 +60,7 @@ const ru = {
         orderFormLastName: "Фамилия",
         orderFormEmail: "Электронная почта",
         orderFormPhone: "Телефон",
+        orderFormCountry: "Страна",
         orderFormAddress: "Адрес",
         orderFormFloor: "Этаж",
         orderFormNotes: "Примечания",
