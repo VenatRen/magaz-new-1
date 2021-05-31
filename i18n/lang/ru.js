@@ -31,7 +31,7 @@ const ru = {
 
         cartTitle: "Корзина",
         cartPcs: "Количество: {{quantity}} шт.",
-        cartTotal: "Итого: {{total}}",
+        cartTotal: "Итог: {{total}}",
         cartCheckout: "Оформить заказ",
         cartDeleteTitle: "Удалить из корзины",
         cartDeleteMessage: "Вы действительно хотите удалить товар из корзины?",
@@ -69,10 +69,15 @@ const ru = {
         orderCancel: "Отменить заказ",
         orderDelete: "Удалить заказ",
         orderViewInfo: "Информация",
+        orderNumber: "Заказ №{{id}}",
         orderStatus: "Статус",
-        orderStatusToBeShipped: "Ожидается отправка",
-        orderStatusShipped: "Отправлен",
-        orderStatusCanceled: "Отменён",
+        orderStatus_PROCESSING: "Обработка",
+        orderStatus_PENDING: "В ожидании оплаты",
+        orderStatus_ON_HOLD: "На удержании",
+        orderStatus_COMPLETED: "Выполнен",
+        orderStatus_CANCELED: "Отменён",
+        orderStatus_FAILED: "Не удался",
+        orderStatus_REFUNDED: "Возврат",
 
         userCheckTitle: "Проверяем данные",
 
