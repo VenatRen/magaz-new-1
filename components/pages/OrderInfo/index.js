@@ -77,7 +77,7 @@ const OrderInfo = (props) => {
             console.log("Error while fetching product data", error)
         }
     });
-    console.log("HELLO DATA", data);
+    
     return (
         <>
             <LinearGradient

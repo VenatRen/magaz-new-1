@@ -58,26 +58,25 @@ const OrderItem = (props) => {
 
     return (
         <Animated.View style={[styles.mainContainer, { opacity, height }]}>
-            <View style={styles.orderInfoContainer}>
-                <View style={styles.orderMainInfo}>
-                    <View style={styles.infoContainer}>
-                        <OurText style={styles.textField} translate={true} params={{id: data.databaseId}}>orderNumber</OurText>
+            <TouchableOpacity onPress={() => navigation.navigate("OrderInfo", { id: data.databaseId, status: data.status })}>
+                <View style={styles.orderInfoContainer}>
+                    <View style={styles.orderMainInfo}>
+                        <View style={styles.infoContainer}>
+                            <OurText style={styles.textField} translate={true} params={{id: data.databaseId}}>orderNumber</OurText>
+                        </View>
+                        <View style={styles.infoContainer}>
+                            <OurText style={styles.textField} translate={true} params={{total: data.total}}>cartTotal</OurText>
+                        </View>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <OurText style={styles.textField} translate={true} params={{total: data.total}}>cartTotal</OurText>
+                    <View style={styles.orderStatusContainer}>
+                        <OurText style={styles.textField} translate={true}>orderStatus</OurText>
+                        <OurText style={styles.orderStatus} translate={true}>{`orderStatus_${data.status}`}</OurText>
                     </View>
                 </View>
-                <View style={styles.orderStatusContainer}>
-                    <OurText style={styles.textField} translate={true}>orderStatus</OurText>
-                    <OurText style={styles.orderStatus} translate={true}>{`orderStatus_${data.status}`}</OurText>
+                <View style={styles.borderContainer}>
+                    <View style={styles.itemBorder}/>
                 </View>
-                <View>
-                    <OurTextButton onPress={() => navigation.navigate("OrderInfo", { id: data.databaseId, status: data.status })}>Open Order Info</OurTextButton>
-                </View>
-            </View>
-            <View style={styles.borderContainer}>
-                <View style={styles.itemBorder}/>
-            </View>
+            </TouchableOpacity>
         </Animated.View>
     );
 };
