@@ -34,16 +34,19 @@ const ProductInfo = (props) => {
     const [buyLoading, setLoading] = useState(false);
     const [quantity, setQuantity] = useState(MIN_QUANTITY);
     const [variation, setVariation] = useState(null);
+    const [abortController, setAbortController] = useState(new AbortController());
 
     const [images, setImages] = useState([imageUrl]);
 
     const [gradStart, gradEnd] = ["#ff6a00", "#ee0979"];
 
-    const { loading, error, data, refetch } = useQuery(QUERY_GET_PRODUCT, {
+    const { loading, error, data, refetch, networkStatus } = useQuery(QUERY_GET_PRODUCT, {
         variables: { id: String(id) },
+        fetchPolicy: "network-only",
+        notifyOnNetworkStatusChange: true,
         context: {
             fetchOptions: {
-                //signal: abortController.signal,
+                signal: abortController.signal,
             },
         },
         onCompleted: (data) => {
@@ -94,7 +97,7 @@ const ProductInfo = (props) => {
             <>
                 <View style={styles.descriptionContainer}>
                     <OurText style={styles.descriptionTitle} translate={true}>productDescription</OurText>
-                    <OurText style={styles.description}>{data.product.description || t("productNoDescription")}</OurText>
+                    <OurText style={styles.description}>{data?.product?.description || t("productNoDescription")}</OurText>
                 </View>
                 <View style={styles.attributeContainer}>
                 {
@@ -111,7 +114,7 @@ const ProductInfo = (props) => {
                 <View style={styles.bottomContainer}>
                     <OurText style={styles.price}
                              params={{
-                                 price: ( data.product.price === 0 || !data.product.price || !variation || variation.price === 0 ) ? t("productFree") : variation ? variation.price : data.product.price
+                                 price: ( !data?.product?.price && !variation ) ? t("productFree") : variation ? variation?.price : data?.product?.price
                              }}>productPrice</OurText>
                     <OurIconButton style={styles.buyButtonContanier}
                                    icon={faCartPlus}
@@ -151,8 +154,8 @@ const ProductInfo = (props) => {
                 </View>
                 <View style={styles.productInfoContainer}>
                     {
-                        loading || buyLoading ?
-                            <OurActivityIndicator containerStyle={styles.loadingIndicator}/>
+                        loading || buyLoading || error || networkStatus.refetch ?
+                            <OurActivityIndicator abortControllerModel={[abortController, setAbortController]} error={error} doRefresh={refetch} containerStyle={styles.loadingIndicator}/>
                         :
                             RenderProductData()
                     }
