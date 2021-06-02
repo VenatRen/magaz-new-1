@@ -71,6 +71,9 @@ const OrderItem = (props) => {
                     <OurText style={styles.textField} translate={true}>orderStatus</OurText>
                     <OurText style={styles.orderStatus} translate={true}>{`orderStatus_${data.status}`}</OurText>
                 </View>
+                <View>
+                    <OurTextButton onPress={() => navigation.navigate("OrderInfo", { id: data.databaseId, status: data.status })}>Open Order Info</OurTextButton>
+                </View>
             </View>
             <View style={styles.borderContainer}>
                 <View style={styles.itemBorder}/>

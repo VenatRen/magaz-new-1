@@ -79,6 +79,8 @@ const ru = {
         orderStatus_FAILED: "Не удался",
         orderStatus_REFUNDED: "Возврат",
 
+        orderInfoProducts: "Товары",
+
         userCheckTitle: "Проверяем данные",
 
         productsTitle: "Товары",
@@ -89,6 +91,7 @@ const ru = {
         productDescription: "Описание",
         productNoDescription: "Описания нет",
         productQuantity: "Количество",
+        productQuantityParam: "Количество: {{quantity}}",
         productAddedMessage: "Товар {{product}} добавлен в вашу корзину!",
         productVariations: "Вариации",
         productsPickerSearch: "Поиск...",

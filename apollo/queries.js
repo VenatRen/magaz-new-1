@@ -324,6 +324,7 @@ export const QUERY_GET_ORDER = gql`
                             sourceUrl
                         }
                     }
+                    quantity
                 }
             }
             status

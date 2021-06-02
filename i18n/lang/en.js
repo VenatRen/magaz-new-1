@@ -78,6 +78,8 @@ const en = {
         orderStatus_FAILED: "Failed",
         orderStatus_REFUNDED: "Refunded",
 
+        orderInfoProducts: "Products",
+
         userCheckTitle: "Checking user data",
 
         productsTitle: "Products",
@@ -88,6 +90,7 @@ const en = {
         productDescription: "Description",
         productNoDescription: "No description",
         productQuantity: "Quantity",
+        productQuantityParam: "Quantity: {{quantity}}",
         productAddedMessage: "{{product}} added to your cart!",
         productVariations: "Variations",
         productsPickerSearch: "Search...",
