@@ -91,7 +91,7 @@ const ru = {
         productQuantity: "Количество",
         productAddedMessage: "Товар {{product}} добавлен в вашу корзину!",
         productVariations: "Вариации",
-        productsPickerSearch: "Найти...",
+        productsPickerSearch: "Поиск...",
 
         errorFetch: "Произошла ошибка при получении данных. Проверьте интернет соединение и повторите попытку.",
         errorApp: "Произошла ошибка.",
