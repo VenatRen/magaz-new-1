@@ -11,7 +11,6 @@ const VariationPicker = (props) => {
     const [variation, setVariation] = props.model;
 
     useEffect(() => {
-        console.log("VARIATION IS", variation)
         if ( !variation )
             setVariation({
                 name: data[0].name,
