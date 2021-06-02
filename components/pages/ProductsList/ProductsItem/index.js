@@ -1,35 +1,24 @@
 import React, { useState } from "react";
-import { View, Dimensions, Animated, TouchableOpacity } from "react-native";
+import { Animated, Dimensions, TouchableOpacity, View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { AddProductToCart } from "~/redux/CartReducer/actions";
-
-import { STORE_ADDRESS } from "~/utils/config";
-import { HTML_PATTERN }  from "~/utils/patterns";
 import { ListAnimation } from "./animation";
 
 import OurText from "~/components/OurText";
 import OurImage from "~/components/OurImage";
-import OurTextButton from "~/components/OurTextButton";
 import OurActivityIndicator from "~/components/OurActivityIndicator";
-import GalleryImg from "~/components/Gallery";
-import OurPicker from "~/components/OurPicker";
 import OurCounter from "~/components/OurCounter";
-import OurImageSlider from "~/components/OurImageSlider";
 import styles from "./styles";
-import client from "~/apollo";
-import { MUTATION_UPDATE_ITEM_QUANTITY } from "~/apollo/queries";
 import SyncStorage from "sync-storage";
 import { ShowLoginModal } from "~/redux/ModalReducer/actions";
 import OurIconButton from "~/components/OurIconButton";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons/faCartPlus";
 
 
-const totalHeight = Dimensions.get("window").height;
+const totalHeight = 570;
 const itemWidth = Dimensions.get("window").width;
-const itemHeight = totalHeight / 2 + 16;
-const itemHeight2 = itemHeight + 16;
 
 const MIN_QUANTITY = 1;
 const MAX_QUANTITY = 999;
@@ -53,6 +42,10 @@ const ProductsItem = (props) => {
         setModalVisible(!isModalVisible);
     };
 
+    const navigateToProductInfo = () => {
+        navigation.navigate("ProductInfo", { name, imageUrl: url, id: data.databaseId });
+    }
+
     // Обрабатываем нажатие на кнопку "Купить"
     const buyProduct = (e) => {
         const auth = SyncStorage.get("auth");
@@ -60,6 +53,11 @@ const ProductsItem = (props) => {
 
         if ( !refresh && !auth ) {
             ShowLoginModal(dispatch, navigation);
+            return;
+        }
+
+        if ( data.variations ) {
+            navigateToProductInfo();
             return;
         }
         //                                               Обрабатываем количество
@@ -73,19 +71,19 @@ const ProductsItem = (props) => {
         setQuantity(Math.clamp(quantity, MIN_QUANTITY, MAX_QUANTITY));
     };
 
-    const [translate, scale, opacity] = ListAnimation(y, totalHeight, itemHeight2, itemWidth, index);
-
     return (
-        <Animated.View style={[styles.mainContainer]}>
-            <TouchableOpacity onPress={() => navigation.navigate("ProductInfo", { name, imageUrl: url, id: data.databaseId })}>
+        <Animated.View style={styles.mainContainer}>
+            <TouchableOpacity onPress={navigateToProductInfo}>
             <View style={styles.titleContainer}>
                 <OurText style={styles.title}>{name}</OurText>
+                <OurImage style={{
+                    width: 320,
+                    height: 320,
+                    resizeMode: "contain",
+                }} url={url} disabled={true} />
             </View>
             </TouchableOpacity>
             <View style={styles.infoContainer}>
-                <View style={styles.infoTopContainer}>
-                    <OurImage url={url} disabled={true} />
-                </View>
                 <View style={styles.infoMiddleContainer}>
                     <View style={styles.counterContainer}>
                         <OurText style={styles.infoPrice} translate={true}>productQuantity</OurText>
