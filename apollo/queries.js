@@ -18,6 +18,48 @@ export const QUERY_CATEGORY_LIST = gql`
         }
     }`;
 
+export const QUERY_GET_PRODUCT = gql`
+    query GetProduct( $id: ID! ) {
+        product(id: $id, idType: DATABASE_ID) {
+            description(format: RAW)
+            galleryImages {
+                nodes {
+                    sourceUrl
+                }
+            }
+            ... on SimpleProduct {
+                price(format: FORMATTED)
+            }
+            ... on VariableProduct {
+                price(format: FORMATTED)
+                attributes {
+                    nodes {
+                        attributeId
+                        name
+                        options
+                    }
+                }
+                variations {
+                    nodes {
+                        databaseId
+                        name
+                        price(format: FORMATTED)
+                        image {
+                            sourceUrl
+                        }
+                        attributes {
+                            nodes {
+                                label
+                                value
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
 /**
  * GraphQL запрос на список товаров
  */
@@ -27,20 +69,17 @@ export const QUERY_PRODUCT_LIST = gql`
             nodes {
                 databaseId
                 name
-                description
+                shortDescription(format: RAW)
                 image {
-                    mediaDetails {
-                        file
-                    }
+                    sourceUrl
                 }
                 galleryImages {
                     nodes {
-                        mediaDetails {
-                            file
-                        }
+                        sourceUrl
                     }
                 }
                 ... on VariableProduct {
+                    price
                     variations {
                         nodes {
                             price
@@ -104,13 +143,14 @@ export const MUTATION_LOGIN_USER = gql`
     }
 `;
 
-export const MUTATION_CREATE_ORDER = gql`
-    mutation CreateOrder($clientMutationId: String!, $customerId: Int!) {
-        createOrder(input:{clientMutationId: $clientMutationId, customerId: $customerId}){
-            clientMutationId
-            order {
-                orderKey
-            }
+export const MUTATION_REFRESH_TOKEN = gql`
+    mutation RefreshAuthToken( $clientMutationId: String!, $jwtRefreshToken: String! ) {
+        refreshJwtAuthToken(
+            input: {
+                clientMutationId: $clientMutationId
+                jwtRefreshToken: $jwtRefreshToken,
+        }) {
+            authToken
         }
     }
 `;
@@ -119,8 +159,13 @@ export const MUTATION_CHECKOUT = gql`
     mutation Checkout(
             $clientMutationId: String!,
             $isPaid: Boolean!,
-            $address: String!,
+            $customerNote: String!,
+            $address1: String!,
+            $address2: String!,
+            $country: CountriesEnum,
+            $city: String!,
             $email: String!,
+            $state: String!,
             $firstName: String!,
             $lastName: String!,
             $postcode: String!,
@@ -131,13 +176,18 @@ export const MUTATION_CHECKOUT = gql`
             clientMutationId: $clientMutationId,
             isPaid: $isPaid,
             paymentMethod: $paymentMethod,
+            customerNote: $customerNote,
             billing: {
-                address1: $address,
+                address1: $address1,
+                address2: $address2,
+                city: $city,
+                country: $country,
                 email: $email,
                 firstName: $firstName,
                 lastName: $lastName,
+                phone: $phone,
                 postcode: $postcode,
-                phone: $phone
+                state: $state,
             }
         } ) {
             clientMutationId
@@ -151,7 +201,28 @@ export const MUTATION_ADD_TO_CART = gql`
             cartItem {
                 key
                 product {
-                    name
+                    node {
+                        name
+                    }
+                }
+                quantity
+                subtotal
+                subtotalTax
+                tax
+                total
+            }
+        }
+    }
+`;
+export const MUTATION_ADD_TO_CART_WITH_VARIATION = gql`
+    mutation cartAdd($productId: Int!, $quantity: Int!, $clientMutationId: String!, $variationId: Int!) {
+        addToCart(input: { productId: $productId, quantity: $quantity, clientMutationId: $clientMutationId, variationId: $variationId }){
+            cartItem {
+                key
+                product {
+                    node {
+                        name
+                    }
                 }
                 quantity
                 subtotal
@@ -170,19 +241,105 @@ export const QUERY_GET_CART = gql`
                 nodes {
                     key
                     product {
-                        databaseId
-                        name
-                        image {
-                            mediaDetails {
-                                file
+                        node {
+                            databaseId
+                            name
+                            image {
+                                sourceUrl
                             }
-                        }   
+                        }
                     }
                     quantity
                     total
+                    variation {
+                        node {
+                            databaseId
+                            name
+                            price
+                            image {
+                                sourceUrl
+                            }
+                        }
+                    }
                 }
             }
             total
+        }
+    }
+`;
+
+export const MUTATION_UPDATE_PRODUCT_QUANTITY = gql`
+    mutation updateProductQuantity( $clientMutationId: String!, $key: ID!, $quantity: Int! ) {
+        updateItemQuantities( input: { clientMutationId: $clientMutationId, items: { key: $key, quantity: $quantity } } ) {
+            clientMutationId
+        }
+    }
+`;
+
+export const MUTATION_DELETE_PRODUCT_FROM_CART = gql`
+    mutation removeItemFromCart( $clientMutationId: String!, $keys: [ID!] ) {
+        removeItemsFromCart( input: { clientMutationId: $clientMutationId, keys: $keys, all: false } ) {
+            clientMutationId
+        }
+    }
+`;
+
+export const QUERY_GET_ORDERS = gql`
+    query getOrders {
+        orders {
+            nodes {
+                databaseId
+                orderKey
+                total
+                status
+            }
+        }
+    }
+`;
+
+export const QUERY_GET_ORDER = gql`
+    query MyQuery( $id: ID! ) {
+        order(id: $id, idType: DATABASE_ID) {
+            lineItems {
+                nodes {
+                    databaseId
+                    product {
+                        databaseId
+                        name
+                        image {
+                            sourceUrl
+                        }
+                        ... on SimpleProduct {
+                            price(format: FORMATTED)
+                        }
+                        ... on VariableProduct {
+                            price(format: FORMATTED)
+                        }
+                    }
+                    variation {
+                        databaseId
+                        name
+                        price(format: FORMATTED)
+                        image {
+                            sourceUrl
+                        }
+                    }
+                    quantity
+                }
+            }
+            status
+            billing {
+                address1
+                address2
+                city
+                country
+                email
+                firstName
+                lastName
+                phone
+                postcode
+                state
+            }
         }
     }
 `;

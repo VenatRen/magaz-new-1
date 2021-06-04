@@ -1,5 +1,5 @@
 import { ORDERS_SET_LIST, ORDERS_SET_LOADING } from "./types";
-import { MUTATION_CHECKOUT } from "~/apollo/queries";
+import { MUTATION_CHECKOUT, QUERY_GET_ORDERS } from "~/apollo/queries";
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { AddToast } from "../ToastReducer/actions";
 import { FetchCartProductList } from "../CartReducer/actions";
@@ -13,9 +13,20 @@ export const SetOrderList = (orderList=[]) => {
 
 export const FetchOrderList = async (dispatch) => {
     dispatch(SetOrdersLoading(true));
-
-    // TODO
-
+    try {
+        const data = await client.query({ query: QUERY_GET_ORDERS });
+        dispatch(SetOrderList(data.data?.orders?.nodes));
+    }
+    catch (e) {
+        console.log("Order fetching error", e);
+        const toast = {
+            icon: faBoxOpen,
+            text: i18n.t("activityError"),
+            duration: 3000,
+            color: "#fc0341",
+        };
+        dispatch(AddToast(toast, "ORDER_FETCH_ERROR"));
+    }
     dispatch(SetOrdersLoading(false));
 };
 
@@ -30,13 +41,19 @@ export const AddOrder = (data) => async (dispatch) => {
             mutationId = uuidv4();
             SyncStorage.set("user-uuid", mutationId);
         }
+        const address = data.address.split(", ");
 
         await client.mutate({
             mutation: MUTATION_CHECKOUT,
             variables: {
                 clientMutationId: mutationId,
                 isPaid: false,
-                address: data.address,
+                customerNote: data.notes,
+                country: data.country,
+                state: address[0] || "",
+                city: address[1] || "",
+                address1: address[2] || "",
+                address2: address[3] || "",
                 email: data.email,
                 firstName: data.firstName,
                 lastName: data.lastName,

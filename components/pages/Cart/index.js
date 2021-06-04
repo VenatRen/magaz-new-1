@@ -14,11 +14,30 @@ import OurTextButton from "~/components/OurTextButton";
 import OurActivityIndicator from "~/components/OurActivityIndicator";
 import styles from "./styles";
 
-const LocallyAnimatedFlatList = ({data}) => {
+const LocallyAnimatedFlatList = ({data, navigation}) => {
     const renderItemsBlock = ({item, index}) => {
         return (
-            <CartItem productId={item.product.databaseId} name={item.product.name} price={item.total} productQuantity={item.quantity} imageLink={item.product.image.mediaDetails.file}/>
-        );
+            <>
+            {
+            item.variation ?
+                <CartItem id={item.key}
+                          productId={item.product.node.databaseId}
+                          name={item.product.node.name}
+                          variationName={item.variation.node.name}
+                          price={item.total}
+                          productQuantity={item.quantity}
+                          navigation={navigation}
+                          imageLink={item.variation.node.image.sourceUrl}/>
+            :
+                <CartItem id={item.key}
+                          productId={item.product.node.databaseId}
+                          name={item.product.node.name}
+                          price={item.total}
+                          productQuantity={item.quantity}
+                          navigation={navigation}
+                          imageLink={item.product.node.image.sourceUrl}/>
+        }
+        </>);
     };
 
     return (
@@ -27,7 +46,7 @@ const LocallyAnimatedFlatList = ({data}) => {
             contentContainerStyle={styles.cartList}
             data={data}
             renderItem={renderItemsBlock}
-            keyExtractor={(item) => String(item.key)}
+            keyExtractor={(item) => item.key}
         />
     )
 };
@@ -60,7 +79,7 @@ const Cart = (props) => {
 
     const toDeliveryDetails = (e) => {
         if ( state.productList?.size ) {
-            if ( !SyncStorage.get("bearer-token") ) {
+            if ( !SyncStorage.get("session") && !SyncStorage.get("refresh-auth") ) {
                 const loginModalData = {
                     title: { text: "cartLoginTitle", params: {} },
                     text: { text: "cartLoginMessage", params: {} },
@@ -104,7 +123,7 @@ const Cart = (props) => {
                 <View style={styles.items}>
                     {
                         state.loading ?
-                            <OurActivityIndicator />
+                            <OurActivityIndicator style={styles.loadingContainer} size={64} oneState={true} color={gradStart} />
                         :
                             state.productList.size === 0 ?
                                 <OurText style={styles.emptyText}
@@ -112,7 +131,7 @@ const Cart = (props) => {
                             : <></>
                         
                     }
-                    <MemoedLocallyAnimatedFlatList data={Array.from(state.productList.values())}/>
+                    <MemoedLocallyAnimatedFlatList data={Array.from(state.productList.values())} navigation={navigation}/>
                     <CartTotal total={state.total} />
                     <View style={styles.bottomContainer}>
                     <OurTextButton

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { ShowModal } from "~/redux/ModalReducer/actions";
-import { Animated, View, LayoutAnimation } from "react-native";
+import { ChangeProductQuantity, DeleteProductFromCart } from "~/redux/CartReducer/actions";
+import { Animated, View, LayoutAnimation, TouchableOpacity } from "react-native";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { STORE_ADDRESS } from "~/utils/config";
 
+import OurActivityIndicator from "~/components/OurActivityIndicator";
 import OurText from "~/components/OurText";
 import OurIconButton from "~/components/OurIconButton";
 import OurImage from "~/components/OurImage";
@@ -25,11 +27,15 @@ const linear = LayoutAnimation.create(
 const MIN_QUANTITY = 1;
 const MAX_QUANTITY = Infinity;
 
+const QUANTITY_CHANGE_DELAY = 1000;
+
 /** Компонент товара в корзине */
 const CartItem = (props) => {
-    const { productId, name, price, productQuantity, imageLink } = props;
+    const { id, productId, name, price, productQuantity, imageLink, variationName, navigation } = props;
     const [isModalVisible, setModalVisible] = useState(false);
     const [quantity, setQuantity] = useState(productQuantity || MIN_QUANTITY);
+    const [loading, setLoading] = useState(false);
+    const [timer, setTimer] = useState(null);
     const opacity = useRef(new Animated.Value(1)).current;
     const dispatch = useDispatch();
 
@@ -40,7 +46,16 @@ const CartItem = (props) => {
         if ( typeof quantity === "string")
             quantity = Number(quantity.replace(/[^0-9]/g, ''));
 
-        setQuantity(Math.clamp(quantity, MIN_QUANTITY, MAX_QUANTITY));
+        if ( quantity < MIN_QUANTITY || quantity > MAX_QUANTITY ) return;
+
+        setQuantity(quantity);
+
+        if ( timer ) {
+            clearTimeout(timer);
+        }
+        setTimer( setTimeout( () => {
+            dispatch(ChangeProductQuantity(id, quantity))
+        }, QUANTITY_CHANGE_DELAY) );
     };
 
     const onRemove = () => {
@@ -59,13 +74,8 @@ const CartItem = (props) => {
                 {
                     text: "ok",
                     onPress: (e) => {
-                        Animated.timing(opacity, {
-                            toValue: 0,
-                            duration: ANIMATION_DURATION,
-                            useNativeDriver: true,
-                        }).start(() => {
-                            // TODO
-                        });
+                        setLoading(true);
+                        dispatch(ChangeProductQuantity(id, 0));
                     },
                 },
             ],
@@ -79,16 +89,21 @@ const CartItem = (props) => {
 
     return (
         <Animated.View style={[styles.mainContainer, { opacity }]}>
-            <View style={styles.topContainer}>
-                <OurText style={styles.itemName}>{name}</OurText>
-                <OurImage style={styles.productImage} url={`${STORE_ADDRESS}wp-content/uploads/${imageLink}`} onPress={toggleModal}/>
-                <OurImageSlider data={[`${STORE_ADDRESS}wp-content/uploads/${imageLink}`]} isModalVisible={isModalVisible} toggleModal={toggleModal} />
-            </View>
+            <TouchableOpacity style={styles.topContainer}  onPress={() => navigation.navigate("ProductInfo", { name, imageUrl: imageLink, id: productId })}>
+                <OurText style={styles.itemName}>{variationName || name}</OurText>
+                <OurImage style={styles.productImage} url={imageLink} disabled={true}/>
+            </TouchableOpacity>
             <View style={styles.bottomContainer}>
                 <View style={styles.counterContainer}>
                     <OurCounter onChange={onQuantityChange} value={quantity} color="#E81C1C"/>
                     {/*<OurText style={[styles.itemPrice, {marginLeft: 8}]} translate={true}>productQuantity</OurText>*/}
-                    <OurIconButton style={styles.deleteButton} onPress={onRemove} icon={faTrash} color="#E81C1C" />
+                    
+                    {
+                        loading ?
+                            <OurActivityIndicator size={32} oneState={true} containerStyle={{position: null}} />
+                        :
+                            <OurIconButton style={styles.deleteButton} disabled={loading} onPress={onRemove} icon={faTrash} color="#E81C1C" />
+                    }
                 </View>
                 <OurText style={styles.itemPrice} translate={true} params={{total: price}}>cartTotal</OurText>
             </View>
